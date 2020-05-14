@@ -202,7 +202,7 @@ def login():
 						if user is not None:
 							response = OrderedDict([
 								('id', user['id']),
-								('id cliente', user['id_cliente']),
+								('id_cliente', user['id_cliente']),
 								('nombre', user['nombre']),
 								('email', user['email'])
 							])
