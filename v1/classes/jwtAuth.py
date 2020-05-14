@@ -32,7 +32,7 @@ class JWTAuth:
 			now = datetime.now()
 			time = now.strftime("%d/%m/%Y %H:%M:%S")
 			stringError = str(time) + " --- " + str(origin) + ": " + str(error) + "\n"
-			with open(r"D:\eniac\API Labs\API\v1\logs\jwtAuth.log", "a") as logFile:
+			with open(r"D:\eniac\LABS357 Dashboard\API Labs\API\v1\logs\jwtAuth.log", "a") as logFile:
 				logFile.write(stringError)
 		except Exception as e:
 			exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -42,7 +42,7 @@ class JWTAuth:
 			now = datetime.now()
 			time = now.strftime("%d/%m/%Y %H:%M:%S")
 			stringError = str(time) + " --- " + str(origin) + ": " + str(error) + "\n"
-			with open(r"D:\eniac\API Labs\API\v1\logs\jwtAuth.log", "a") as logFile:
+			with open(r"D:\eniac\LABS357 Dashboard\API Labs\API\v1\logs\jwtAuth.log", "a") as logFile:
 				logFile.write(stringError)
 	
 	def __getPrivateKey(self):

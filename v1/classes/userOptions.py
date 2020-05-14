@@ -1,16 +1,17 @@
 #!/usr/bin/python3.5
 # -*- coding: utf-8 -*-
 
+
 # Librerías
 from collections import OrderedDict
 
 
 def get_ordered_options(user_options):
-    """Devuelve las opciones del usuario como una lista de diccionarios 
-    ordenados.
+    """
+    Returns user options as a list of ordered dictionaries.
 
-    Argumentos:
-    user_options -- opciones de menú del usuario
+    Keywords arguments:
+    user_options -- user menu options
     """
 
     # Variables locales

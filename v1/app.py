@@ -11,6 +11,7 @@ from classes.utils import Utils
 from classes.procedure import Procedure
 from classes.error import Error
 from classes.userOptions import get_ordered_options
+from classes.userChannels import get_user_channels
 from collections import OrderedDict
 import ssl
 import importlib
@@ -21,8 +22,8 @@ import simplejson as json
 
 __sslCert = "/etc/ssl/certs/labs357.com.ar.crt"
 __sslKey = "/etc/ssl/private/labs357.key"
-__jwtPrivateKey = r"D:\eniac\API Labs\API\v1\keys\private.key"
-__jwtPublicKey = r"D:\eniac\API Labs\API\v1\keys\public.key"
+__jwtPrivateKey = r"D:\eniac\LABS357 Dashboard\API Labs\API\v1\keys\private.key"
+__jwtPublicKey = r"D:\eniac\LABS357 Dashboard\API Labs\API\v1\keys\public.key"
 __appPort = 5006
 __appHostname = "0.0.0.0"
 __dbName = "dev_plataforma"
@@ -192,19 +193,20 @@ def login():
 						email = json_data['email']
 						password = json_data['password']
 						args = (email, password)
-						user = db.callProc(
+						user_results = db.callProc(
 							Procedure.GET_USER_PLATFORM, 
 							args, 
-							False
+							True
 						)  # Obtención de usuario
-
+						print(user_results)
 						# Revisar que el usuario existe
-						if user is not None:
+						if user_results is not None:
 							response = OrderedDict([
-								('id', user['id']),
-								('id_cliente', user['id_cliente']),
-								('nombre', user['nombre']),
-								('email', user['email'])
+								('id', user_results[0]['id']),
+								('id_cliente', user_results[0]['id_cliente']),
+								('nombre', user_results[0]['nombre']),
+								('email', user_results[0]['email']),
+								('canales', get_user_channels(user_results))
 							])
 						else:
 							# Usuario inválido

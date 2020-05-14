@@ -8,7 +8,7 @@ from datetime import date, datetime
 import simplejson as json
 
 class Utils:
-	__errorLogPath = r"D:\eniac\API Labs\API\v1\logs\error.log"
+	__errorLogPath = r"D:\eniac\LABS357 Dashboard\API Labs\API\v1\logs\error.log"
 
 	@staticmethod
 	def setLog():
