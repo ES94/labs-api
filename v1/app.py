@@ -199,7 +199,7 @@ def login():
 						)  # Obtención de usuario
 						
 						# Revisar que el usuario existe
-						if user_results is not None:
+						if user_results:
 							response = OrderedDict([
 								('id', user_results[0]['id']),
 								('id_cliente', user_results[0]['id_cliente']),
@@ -280,7 +280,7 @@ def profile():
 						)  # Obtención de opciones
 
 						# Revisar que el usuario existe
-						if user_opt is not None:
+						if user_opt:
 							response = User.get_ordered_options(user_opt)
 						else:
 							# Usuario inválido
