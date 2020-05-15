@@ -10,8 +10,7 @@ from classes.database import Database
 from classes.utils import Utils
 from classes.procedure import Procedure
 from classes.error import Error
-from classes.userOptions import get_ordered_options
-from classes.userChannels import get_user_channels
+from classes.user import User
 from collections import OrderedDict
 import ssl
 import importlib
@@ -198,7 +197,7 @@ def login():
 							args, 
 							True
 						)  # Obtención de usuario
-						print(user_results)
+						
 						# Revisar que el usuario existe
 						if user_results is not None:
 							response = OrderedDict([
@@ -206,7 +205,9 @@ def login():
 								('id_cliente', user_results[0]['id_cliente']),
 								('nombre', user_results[0]['nombre']),
 								('email', user_results[0]['email']),
-								('canales', get_user_channels(user_results))
+								('canales', User.get_user_channels(
+									user_results
+									))
 							])
 						else:
 							# Usuario inválido
@@ -280,7 +281,7 @@ def profile():
 
 						# Revisar que el usuario existe
 						if user_opt is not None:
-							response = get_ordered_options(user_opt)
+							response = User.get_ordered_options(user_opt)
 						else:
 							# Usuario inválido
 							error = Error.INVALID_USER
