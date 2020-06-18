@@ -107,6 +107,7 @@ class Database(object):
 				res = dbCur.fetchone()
 			
 			dbCur.close()
+			dbCon.commit()
 			self.__closeConnection()
 			return res
 		except Exception as e:
