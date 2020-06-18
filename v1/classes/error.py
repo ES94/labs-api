@@ -48,3 +48,8 @@ class Error:
         ("errno", 8),
         ("errmsg", "Client was not found. Please try again")
     ])  
+
+    USER_CREATION_ERROR = OrderedDict([
+        ("errno", 9),
+        ("errmsg", "An error has occurred during user creation")
+    ])
