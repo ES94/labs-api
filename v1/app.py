@@ -247,6 +247,87 @@ def login():
     )
 
 
+@app.route('/getuser', methods=['POST'])
+def get_user():
+    # Variables locales
+    error = None
+    response = None
+    id_user = None
+
+    try:
+        # Revisar formato JSON válido
+        valid_json_data = Utils.validateRequestJsonData(request)
+        if valid_json_data:
+            # Revisar existencia del token
+            token = Utils.getTokenFromHeader(request)
+            if token is not None:
+                # Revisar validez del token
+                auth = JWTAuth(__jwtPrivateKey, __jwtPublicKey)
+                decoded_token = auth.decodeToken(token)
+                if 'errno' not in decoded_token:
+                    # Revisar argumentos válidos
+                    json_data = request.get_json()
+                    validate_arguments = Utils.allPostArgumentsExists(
+                        json_data,
+                        ['id_user']
+                    )
+                    if validate_arguments[0]:
+                        # Crear db, tupla de args y llamada a SP
+                        db = Database.getInstance(
+                            __dbHost,
+                            __dbUser,
+                            __dbPswd,
+                            __dbName
+                        )
+                        id_user = json_data['id_user']
+                        args = (id_user, )
+                        user_results = db.callProc(
+                            Procedure.GET_USER_PLATFORM_BY_ID,
+                            args,
+                            True
+                        )  # Obtención de usuario
+
+                        # Revisar que el usuario existe
+                        if user_results:
+                            response = OrderedDict([
+                                ('id', user_results[0]['id']),
+                                ('id_cliente',
+                                 user_results[0]['id_cliente']),
+                                ('nombre', user_results[0]['nombre']),
+                                ('email', user_results[0]['email']),
+                                ('canales', User.get_user_channels(
+                                    user_results
+                                ))
+                            ])
+                        else:
+                            # Usuario inválido
+                            error = Error.INVALID_USER
+                    else:
+                        # Argumentos inválidos
+                        error = copy.deepcopy(Error.REQUIRED_ARGUMENTS)
+                        error['errmsg'] = error['errmsg'].format(
+                            validate_arguments[1]
+                        )
+                else:
+                    # Token inválido
+                    error = decoded_token
+            else:
+                # Token inexistente
+                error = Error.TOKEN_NOT_FOUND
+        else:
+            # Formato JSON inválido
+            error = Error.INVALID_REQUEST_BODY
+    except:
+        Utils.setLog()
+        error = Error.PROGRAMMING_ERROR
+
+    return wrappers.Response(
+        json.dumps(response if error is None else error),
+        200,
+        mimetype='application/json'
+    )
+
+
 @app.route('/profile', methods=['POST'])
 def profile():
     # Variables locales
@@ -527,6 +608,98 @@ def create_user():
                                 ('status', 'success'),
                                 ('message', 'User created successfully')
                             ])
+                        else:
+                            # Creación de usuario fallida
+                            error = Error.USER_CREATION_ERROR
+                    else:
+                        # Argumentos inválidos
+                        error = copy.deepcopy(Error.REQUIRED_ARGUMENTS)
+                        error['errmsg'] = error['errmsg'].format(
+                            validate_arguments[1]
+                        )
+                else:
+                    # Token inválido
+                    error = decoded_token
+            else:
+                # Token inexistente
+                error = Error.TOKEN_NOT_FOUND
+        else:
+            # Formato JSON inválido
+            error = Error.INVALID_REQUEST_BODY
+    except:
+        Utils.setLog()
+        error = Error.PROGRAMMING_ERROR
+
+    return wrappers.Response(
+        json.dumps(response if error is None else error),
+        200,
+        mimetype='application/json'
+    )
+
+
+@app.route('/updateuser', methods=['POST'])
+def update_user():
+    # Variables locales
+    error = None
+    response = None
+    id_user = None
+    user_name = None
+    email = None
+    password = None
+    id_hub = None
+    options = None
+
+    try:
+        # Revisar formato JSON válido
+        valid_json_data = Utils.validateRequestJsonData(request)
+        if valid_json_data:
+            # Revisar existencia del token
+            token = Utils.getTokenFromHeader(request)
+            if token is not None:
+                # Revisar validez del token
+                auth = JWTAuth(__jwtPrivateKey, __jwtPublicKey)
+                decoded_token = auth.decodeToken(token)
+                if 'errno' not in decoded_token:
+                    # Revisar argumentos válidos
+                    json_data = request.get_json()
+                    validate_arguments = Utils.allPostArgumentsExists(
+                        json_data,
+                        [
+                            'id_user', 'user_name', 'email',
+                            'password', 'id_hub', 'options'
+                        ]
+                    )
+                    if validate_arguments[0]:
+                        # Crear db, tupla de args y llamada a SP
+                        db = Database.getInstance(
+                            __dbHost,
+                            __dbUser,
+                            __dbPswd,
+                            __dbName
+                        )
+                        id_user = json_data['id_user']
+                        user_name = json_data['user_name']
+                        email = json_data['email']
+                        password = json_data['password']
+                        id_hub = json_data['id_hub']
+                        options = json_data['options']
+                        args = (
+                            id_user, user_name, email, password,
+                            id_hub, options
+                        )
+                        creation_result = db.callProc(
+                            Procedure.UPDATE_USER,
+                            args,
+                            True
+                        )  # Creación de usuario
+                        
+                        # Revisar que la creación sea exitosa
+                        if creation_result:
+                            response = OrderedDict([
+                                ('status', 'success'),
+                                ('message', 'User updated successfully')
+                            ])
+                            print(creation_result[0]['id_usuario'])
                         else:
                             # Creación de usuario fallida
                             error = Error.USER_CREATION_ERROR
