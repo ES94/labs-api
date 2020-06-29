@@ -699,7 +699,6 @@ def update_user():
                                 ('status', 'success'),
                                 ('message', 'User updated successfully')
                             ])
-                            print(creation_result[0]['id_usuario'])
                         else:
                             # Creación de usuario fallida
                             error = Error.USER_CREATION_ERROR

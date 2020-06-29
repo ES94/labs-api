@@ -36,32 +36,30 @@ class User:
                         'id_opcion_menu_cliente',
                         opt['id_opcion_menu_cliente']
                     ))
+                parent.append(('abm', opt['abm']))
+                parent.append(
+                    ('acceso', opt['acceso'] if 'acceso' in opt else 0)
+                )
+                if opt['abm'] == 1:
+                    parent.append((
+                        'alta',
+                        opt['alta'] if 'alta' in opt else 0
+                    ))
+                    parent.append((
+                        'modifica',
+                        opt['modifica'] if 'modifica' in opt else 0
+                    ))
+                    parent.append((
+                        'elimina',
+                        opt['elimina'] if 'elimina' in opt else 0
+                    ))
+                    parent.append((
+                        'recupera',
+                        opt['recupera'] if 'recupera' in opt else 0
+                    ))
 
-                # Sin hijos
-                if opt['path'] != '':
-                    parent.append(('abm', opt['abm']))
-                    parent.append(
-                        ('acceso', opt['acceso'] if 'acceso' in opt else 0)
-                    )
-                    if opt['abm'] == 1:
-                        parent.append((
-                            'alta',
-                            opt['alta'] if 'alta' in opt else 0
-                        ))
-                        parent.append((
-                            'modifica',
-                            opt['modifica'] if 'modifica' in opt else 0
-                        ))
-                        parent.append((
-                            'elimina',
-                            opt['elimina'] if 'elimina' in opt else 0
-                        ))
-                        parent.append((
-                            'recupera',
-                            opt['recupera'] if 'recupera' in opt else 0
-                        ))
-                else:
-                    # Con hijos, entonces buscar hijos
+                # Con hijos, entonces buscar hijos
+                if opt['path'] == '':
                     children = []  # Lista de listas de tuplas
                     for child_opt in user_options:
                         if child_opt['id_padre'] == opt['id']:
